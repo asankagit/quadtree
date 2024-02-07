@@ -1,0 +1,101 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>React App</title><script defer="defer" src="bundle.js"></script></head><body><div id="root"></div><canvas id="glCanvas" width="800" height="600"></canvas><script>// REFERENCE: https://webglfundamentals.org/webgl/lessons/webgl-3d-textures.html
+    async function loadShader(url) {
+        try {
+            const response = await fetch(url);
+            return await response.text();
+        } catch (error) {
+            console.error('Error loading shader:', error);
+            return null;
+        }
+    }
+
+    function compileShader(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error('Error compiling shader:', gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+            return null;
+        }
+
+        return shader;
+    }
+
+    const image = new Image();
+    // image.onload = function() {
+    //     main(image); // Call the main function after the image is loaded
+    // };
+    image.addEventListener('load', main(image))
+    image.src = 'test_gnuplot.png'; // Set the path to your image file
+
+
+    async function main(image) {
+        console.log({ image })
+        const canvas = document.getElementById('glCanvas');
+        const gl = canvas.getContext('webgl');
+
+        const vertexShaderUrl = 'path/to/vertex-shader.glsl';
+        const fragmentShaderUrl = 'path/to/fragment-shader.glsl';
+
+        const vertexShaderSource = `attribute vec2 a_position;
+
+        void main() {
+            gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+        `
+        //await loadShader(vertexShaderUrl);
+        const fragmentShaderSource = `
+        precision mediump float;
+
+        uniform sampler2D u_image;
+
+        void main() {
+            vec2 texCoord = gl_FragCoord.xy / vec2(800.0, 600.0); // Assuming canvas size is 800x600
+            vec4 texColor = texture2D(u_image, texCoord);
+            
+            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        }
+
+        `
+        // await loadShader(fragmentShaderUrl);
+
+        if (vertexShaderSource && fragmentShaderSource) {
+            const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+            const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+            const dummyTexture = new Uint8Array([255, 255, 255, 255]);
+            const shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertexShader);
+            gl.attachShader(shaderProgram, fragmentShader);
+            gl.linkProgram(shaderProgram);
+            gl.useProgram(shaderProgram);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            const vertices = [
+                -1.0,  1.0,
+                 1.0,  1.0,
+                -1.0, -1.0,
+                 1.0, -1.0,
+            ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            const positionAttributeLocation = gl.getAttribLocation(shaderProgram, 'a_position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+            const texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, dummyTexture;
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        }
+    }
+
+    // main();</script></body></html>

@@ -205,7 +205,7 @@
      * @return {WebGLProgram} The created program.
      * @memberOf module:webgl-utils
      */
-    function createProgramFromScripts(
+    function createProgramFromScripts_original(
         gl, shaderScriptIds, opt_attribs, opt_locations, opt_errorCallback) {
       const shaders = [];
       for (let ii = 0; ii < shaderScriptIds.length; ++ii) {
@@ -215,6 +215,41 @@
       return createProgram(gl, shaders, opt_attribs, opt_locations, opt_errorCallback);
     }
   
+    function createProgramFromScripts(gl, vertexShaderSource, fragmentShaderSource) {
+        // Create vertex shader
+        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        if (!vertexShader) {
+            console.error('Failed to create vertex shader');
+            return null;
+        }
+        gl.shaderSource(vertexShader, vertexShaderSource);
+        gl.compileShader(vertexShader);
+        // Check for compilation errors...
+    
+        // Create fragment shader
+        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        if (!fragmentShader) {
+            console.error('Failed to create fragment shader');
+            return null;
+        }
+        gl.shaderSource(fragmentShader, fragmentShaderSource);
+        gl.compileShader(fragmentShader);
+        // Check for compilation errors...
+    
+        // Create program
+        const program = gl.createProgram();
+        if (!program) {
+            console.error('Failed to create shader program');
+            return null;
+        }
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        // Check for linking errors...
+    
+        return program;
+    }
+    
     /**
      * Creates a program from 2 sources.
      *

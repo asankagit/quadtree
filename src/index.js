@@ -1,4 +1,4 @@
 import React from 'react';
-import Chameleon from 'n@asanka-npm/chameleon';
+import Chameleon from './lib';
 
 export default Chameleon;

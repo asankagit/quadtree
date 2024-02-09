@@ -6,18 +6,22 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'index.js'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.tsx'],
+    extensions: ['.ts', '.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js$|jsx/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+              presets: ['@babel/preset-env', '@babel/preset-react']
+
+          }
         }
       },
       {
@@ -27,20 +31,4 @@ module.exports = {
       },
     ]
   },
-  plugins: [
-    // new HtmlWebpackPlugin({
-    //   template: './public/index.html'
-    // }),
-    new webpack.ProvidePlugin({
-      'webglUtils': path.resolve(__dirname, './src/lib/webgl-utils')
-  }),
-  ],
-  devServer: {
-    static: {
-        directory: path.join(__dirname, 'dist')
-      },
-    // contentBase: path.join(__dirname, 'dist'),
-    port: 3000,
-    open: true
-  }
 };

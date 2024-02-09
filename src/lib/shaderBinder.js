@@ -1,15 +1,17 @@
-function paint(fileName: string, canvas: HTMLCanvasElement): void {
+const webglUtils  = require("./webgl-utils")
+
+function paint(fileName, canvast) {
     const image = new Image();
     image.src = fileName;
     image.onload = function () {
         render(image, canvas);
     };
 }
-declare var webglUtils: any;
+
 
 
 // REFERENCE: https://webglfundamentals.org/webgl/lessons/webgl-3d-textures.html
-function render(image: HTMLImageElement, canvasEle: HTMLCanvasElement) {
+function render(image, canvasEle) {
     /** @type {HTMLCanvasElement} */
     var canvas = canvasEle;//document.getElementById("glCanvas");
     var gl = canvas.getContext("webgl");
@@ -168,7 +170,7 @@ function render(image: HTMLImageElement, canvasEle: HTMLCanvasElement) {
     gl.drawArrays(primitiveType, offset, count);
 }
 
-function setRectangle(gl: any, x: any, y: any, width: number, height: number) {
+function setRectangle(gl, x, y ,width, height) {
     var x1 = x;
     var x2 = x + width;
     var y1 = y;

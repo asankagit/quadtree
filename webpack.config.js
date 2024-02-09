@@ -9,17 +9,18 @@ module.exports = {
     filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.tsx'],
+    extensions: ['.ts', '.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js$|jsx/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-react']
+              presets: ['@babel/preset-env', '@babel/preset-react']
+
           }
         }
       },
@@ -38,12 +39,12 @@ module.exports = {
       'webglUtils': path.resolve(__dirname, './src/lib/webgl-utils')
   }),
   ],
-  devServer: {
-    static: {
-        directory: path.join(__dirname, 'dist')
-      },
-    // contentBase: path.join(__dirname, 'dist'),
-    port: 3000,
-    open: true
-  }
+  // devServer: {
+  //   static: {
+  //       directory: path.join(__dirname, 'dist')
+  //     },
+  //   // contentBase: path.join(__dirname, 'dist'),
+  //   port: 3000,
+  //   open: true
+  // }
 };

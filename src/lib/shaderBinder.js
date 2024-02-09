@@ -1,4 +1,4 @@
-const webglUtils  = require("webgl-utils")
+const webglUtils  = require("./webgl-utils")
 
 function paint(fileName, canvast) {
     const image = new Image();

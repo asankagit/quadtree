@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'index.js'
   },
   resolve: {
     extensions: ['.ts', '.js', '.jsx'],
@@ -31,20 +31,4 @@ module.exports = {
       },
     ]
   },
-  plugins: [
-    // new HtmlWebpackPlugin({
-    //   template: './public/index.html'
-    // }),
-    new webpack.ProvidePlugin({
-      'webglUtils': path.resolve(__dirname, './src/lib/webgl-utils')
-  }),
-  ],
-  // devServer: {
-  //   static: {
-  //       directory: path.join(__dirname, 'dist')
-  //     },
-  //   // contentBase: path.join(__dirname, 'dist'),
-  //   port: 3000,
-  //   open: true
-  // }
 };

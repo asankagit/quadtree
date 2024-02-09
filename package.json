@@ -1,8 +1,8 @@
 {
   "name": "@asanka-npm/chameleon",
-  "version": "0.0.6",
+  "version": "0.0.9",
   "description": "Shader arts",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js"

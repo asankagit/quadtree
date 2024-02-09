@@ -9,7 +9,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.js', '.tsx'],
   },
   module: {
     rules: [
@@ -21,16 +21,16 @@ module.exports = {
         }
       },
       {
-        test: /\.ts$/,
-        use: 'ts-loader',
+        test: /\.ts$|tsx/,
         exclude: /node_modules/,
-    },
+        use: 'ts-loader',
+      },
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: './public/index.html'
-    }),
+    // new HtmlWebpackPlugin({
+    //   template: './public/index.html'
+    // }),
     new webpack.ProvidePlugin({
       'webglUtils': path.resolve(__dirname, './src/lib/webgl-utils')
   }),

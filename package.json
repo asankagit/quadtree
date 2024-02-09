@@ -2,7 +2,7 @@
   "name": "@asanka-npm/chameleon",
   "version": "0.0.2",
   "description": "Shader arts",
-  "main": "src/index.js",
+  "main": "dist/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
@@ -18,9 +18,13 @@
   },
   "homepage": "https://github.com/asankagit/quadtree#readme",
   "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
+    "babel-loader": "^9.1.3",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "webpack": "^5.90.1",

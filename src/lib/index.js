@@ -1,15 +1,10 @@
 import * as shaderBinder from "./shaderBinder";
 import React, { useRef, useEffect, useState } from 'react';
 
-interface CanvasProps {
-    width: number;
-    height: number;
-    src: string;
-}
 
-const CanvasComponent: React.FC<CanvasProps> = ({ width, src, height }) => {
+const CanvasComponent = ({ width, src, height }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const INITIAL_PROPS: CanvasProps = {
+    const INITIAL_PROPS = {
         width: 100,
         height: 100,
         src: ''
@@ -17,7 +12,7 @@ const CanvasComponent: React.FC<CanvasProps> = ({ width, src, height }) => {
     const [canvasProps, setCanvasProps] = useState<CanvasProps>(INITIAL_PROPS);
     const prevPropsCountRef = useRef<CanvasProps>(INITIAL_PROPS);
 
-    const setUpContext = (canvas: HTMLCanvasElement, name: string) => {
+    const setUpContext = (canvas, name) => {
         shaderBinder.paint(name, canvas);
     };
 

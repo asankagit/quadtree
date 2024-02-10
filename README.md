@@ -1,6 +1,6 @@
 ### Chameleon
 
-Light weight image uitll witch custom shader support
+Light weight image uitll with custom shader support
 
 
 # dev build

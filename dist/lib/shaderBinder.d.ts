@@ -1,1 +1,1 @@
-export function paint(fileName: any, canvas: any): void;
+export function paint(fileName: any, canvas: any, shaderCode?: any): void;

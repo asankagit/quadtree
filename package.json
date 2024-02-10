@@ -1,13 +1,13 @@
 {
   "name": "@asanka-npm/chameleon",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shader arts",
   "main": "dist/main.cjs.js",  
   "types": "dist/index.d.ts",  
   "module": "dist/main.umd.js", 
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode development"
+    "build": "webpack --mode development && tsc --declaration --outDir dist src/*.js src/**/*.js --allowJs"
   },
   "repository": {
     "type": "git",

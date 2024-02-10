@@ -3,7 +3,7 @@ const webglUtils  = require("./webgl-utils")
 
 
 // REFERENCE: https://webglfundamentals.org/webgl/lessons/webgl-3d-textures.html
-function render(image, canvasEle) {
+function render(image, canvasEle, shaderCode=null) {
     /** @type {HTMLCanvasElement} */
     var canvas = canvasEle;//document.getElementById("glCanvas");
     var gl = canvas.getContext("webgl");
@@ -11,63 +11,67 @@ function render(image, canvasEle) {
         return;
     }
 
+    const vertexShader = shaderCode?.vertex ? shaderCode.vertex : `attribute vec2 a_position;
+    attribute vec2 a_texCoord;
+    
+    uniform vec2 u_resolution;
+    
+    varying vec2 v_texCoord;
+    
+    void main() {
+       // convert the rectangle from pixels to 0.0 to 1.0
+       vec2 zeroToOne = a_position / u_resolution;
+    
+       // convert from 0->1 to 0->2
+       vec2 zeroToTwo = zeroToOne * 2.0;
+    
+       // convert from 0->2 to -1->+1 (clipspace)
+       vec2 clipSpace = zeroToTwo - 1.0;
+    
+       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+    
+       // pass the texCoord to the fragment shader
+       // The GPU will interpolate this value between points.
+       v_texCoord = a_texCoord;
+    }`;
+
+    const fragmentShader = shaderCode?.fragment ? shaderCode.fragment : `precision mediump float;
+
+    // our texture
+    uniform sampler2D u_image;
+    uniform vec2 iResolution;
+    // the texCoords passed in from the vertex shader.
+    varying vec2 v_texCoord;
+    
+    void main() {
+        vec2 uv = gl_FragCoord.xy / iResolution;
+    
+        // get pixel information from uv location
+        vec4 texColor = texture2D(u_image, v_texCoord).bgra;
+    
+        float intensity = fract(texColor.x * texColor.y * 2.5);
+    
+        //gl_FragColor = texture2D(u_image, v_texCoord).bgra;
+        vec4 color;
+        if (intensity > 0.8)
+            color = vec4(texColor.rgb, 1.0);
+        else if (intensity > 0.5)
+            color = vec4(texColor.rgb, .9);
+        else if (intensity > 0.25)
+            color = vec4(texColor.rgb, .4);
+        else
+            color = vec4(texColor.rgb, .5);
+        
+        float grayScale = (texColor.r + texColor.g + texColor.b) / 3.0;
+        gl_FragColor = vec4(grayScale, texColor.gb * 1.8, 1.0);
+    
+       
+    }`;
+
     // setup GLSL program
     var program = webglUtils.createProgramFromScripts(gl,
-        `attribute vec2 a_position;
-       attribute vec2 a_texCoord;
-       
-       uniform vec2 u_resolution;
-       
-       varying vec2 v_texCoord;
-       
-       void main() {
-          // convert the rectangle from pixels to 0.0 to 1.0
-          vec2 zeroToOne = a_position / u_resolution;
-       
-          // convert from 0->1 to 0->2
-          vec2 zeroToTwo = zeroToOne * 2.0;
-       
-          // convert from 0->2 to -1->+1 (clipspace)
-          vec2 clipSpace = zeroToTwo - 1.0;
-       
-          gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-       
-          // pass the texCoord to the fragment shader
-          // The GPU will interpolate this value between points.
-          v_texCoord = a_texCoord;
-       }`,
-        `precision mediump float;
-
-        // our texture
-        uniform sampler2D u_image;
-        uniform vec2 iResolution;
-        // the texCoords passed in from the vertex shader.
-        varying vec2 v_texCoord;
+        vertexShader, fragmentShader
         
-        void main() {
-            vec2 uv = gl_FragCoord.xy / iResolution;
-        
-            // get pixel information from uv location
-            vec4 texColor = texture2D(u_image, v_texCoord).bgra;
-        
-            float intensity = fract(texColor.x * texColor.y * 2.5);
-        
-            //gl_FragColor = texture2D(u_image, v_texCoord).bgra;
-            vec4 color;
-            if (intensity > 0.8)
-                color = vec4(texColor.rgb, 1.0);
-            else if (intensity > 0.5)
-                color = vec4(texColor.rgb, .9);
-            else if (intensity > 0.25)
-                color = vec4(texColor.rgb, .4);
-            else
-                color = vec4(texColor.rgb, .5);
-            
-            float grayScale = (texColor.r + texColor.g + texColor.b) / 3.0;
-            gl_FragColor = vec4(grayScale, texColor.gb * 1.8, 1.0);
-        
-           
-        }`
     );
 
     // look up where the vertex data needs to go.
@@ -178,11 +182,11 @@ function setRectangle(gl, x, y ,width, height) {
 }
 
 
-export const paint = (fileName, canvas) => {
+export const paint = (fileName, canvas, shaderCode=null) => {
     const image = new Image();
     image.src = fileName;
     image.onload = function () {
-        render(image, canvas);
+        render(image, canvas, shaderCode);
     };
 }
 

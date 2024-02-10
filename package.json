@@ -1,6 +1,6 @@
 {
   "name": "@asanka-npm/chameleon",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Shader arts",
   "main": "dist/main.cjs.js",  
   "types": "dist/index.d.ts",  

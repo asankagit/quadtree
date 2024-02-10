@@ -1,8 +1,7 @@
-import * as shaderBinder from "./shaderBinder";
 import React, { useRef, useEffect, useState } from 'react';
 
 
-const CanvasComponent = ({ width, src, height }) => {
+const CanvasComponent = ({ width, src, height, setUpContext_=null}) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const INITIAL_PROPS = {
         width: 100,
@@ -18,8 +17,8 @@ const CanvasComponent = ({ width, src, height }) => {
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (canvas) {
-            setUpContext(canvas, src);
+        if (canvas && setUpContext_) {
+            setUpContext_(canvas, src);
         }
         if (width !== prevPropsCountRef.current.width) {
             setCanvasProps({

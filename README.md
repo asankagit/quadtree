@@ -16,16 +16,32 @@ Light weight image uitll with custom shader support
 
 ### Usage
 ```
-import shaderBinder from '@asanka-npm/chameleon';
+import shaderBinder, {FlatGray,GrayScale} from '@asanka-npm/chameleon';
+import img from "path/to/your/image"
+  ...
+const FLatAndGrayRender = ({ width, src, height, }) => {
+  const canvasRef = useRef(null);
 
-shaderBinder(
-    name, 
-    canvas,
-    {
-      vertex: `vertex shader code`,
-      fragment: `fragment shader`
-    }
-);
+  const setUpContext = (canvas, name) => {
+    FlatGray(name, canvas);
+  };
 
+  useEffect(() => {
+      const canvas = canvasRef.current;
+      if (canvas) {
+          setUpContext(canvas, src);
+      }
+  }, []);
+
+  return <canvas ref={canvasRef}  width={width} height={height}/>;
+};
+ ...
+
+ return (
+    ...
+   <FLatAndGrayRender src={img} width={400} height={400}/>
+    ...
+ )
+ ...
 ```
 

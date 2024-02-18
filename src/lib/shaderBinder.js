@@ -184,6 +184,14 @@ function setRectangle(gl, x, y ,width, height) {
 
 export const paint = (fileName, canvas, shaderCode=null) => {
     const image = new Image();
+    if (canvas.width && !Number.isNaN(canvas.width)) {
+        image.width = canvas.width;
+    }
+    
+    if (canvas.height && !Number.isNaN(canvas.height)) {
+        image.height = canvas.height;
+    }
+    
     image.src = fileName;
     image.onload = function () {
         render(image, canvas, shaderCode);

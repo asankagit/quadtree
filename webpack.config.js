@@ -41,15 +41,6 @@ module.exports = [
   },
   {
     entry: './src/index.js', // Adjust entry point if needed
-    // output: {
-    //   path: path.resolve(__dirname, 'dist/mini'),
-    //   filename: '[name].js', // Use .mjs for ES modules
-    //   library: {
-    //     // name: 'Chameleon',
-    //     type: 'module'
-    //   }
-    //   // libraryTarget: 'umd',
-    // },
     output: {
 
       path: path.resolve(__dirname, 'dist'), // Output directory
@@ -81,15 +72,5 @@ module.exports = [
         },
       ]
     },
-    // experiments: {
-    //   outputModule: true, // Enable 'outputModule' experiment
-    // },
     devtool: 'source-map', // Enable source mapping
-    // externals: [
-    //   'react', // Assume React is available in the browser environment
-    //   'react-dom' // Optional if your library doesn't directly depend on React DOM
-    // ],
-    // plugins: [
-    //   // ... consider adding plugins for optimization (e.g., tree shaking, minification)
-    // ]
   }];

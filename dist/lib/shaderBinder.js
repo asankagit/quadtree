@@ -102,6 +102,12 @@ function setRectangle(gl, x, y, width, height) {
 var paint = function (fileName, canvas, shaderCode) {
     if (shaderCode === void 0) { shaderCode = null; }
     var image = new Image();
+    if (canvas.width && !Number.isNaN(canvas.width)) {
+        image.width = canvas.width;
+    }
+    if (canvas.height && !Number.isNaN(canvas.height)) {
+        image.height = canvas.height;
+    }
     image.src = fileName;
     image.onload = function () {
         render(image, canvas, shaderCode);
